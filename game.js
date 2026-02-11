@@ -63,7 +63,8 @@ const priceBoost = document.getElementById("price_boost");
 
 // CONFIG: set your worker base URL (Cloudflare Worker)
 // Example: https://neonrush-api.YOURNAME.workers.dev
-const WORKER_BASE = ""; // <- set later, can be empty
+const WORKER_BASE = "https://plain-math-d92f.johannesmaier37.workers.dev";
+
 
 // Canvas base size
 const W = canvas.width, H = canvas.height;
