@@ -9,56 +9,125 @@
 </head>
 <body>
   <header class="topbar">
-    <div id="score">Score: 0</div>
-    <div id="coins">Coins: 0</div>
+    <div class="pill" id="score">Score: 0</div>
+    <div class="pill" id="wallet">Coins: 0 • Gems: 0</div>
   </header>
 
   <main class="wrap">
-    <canvas id="game" width="360" height="640" aria-label="Game Canvas"></canvas>
+    <canvas id="game" width="360" height="640"></canvas>
 
-    <div class="hud">
-      <button id="btnPlay" class="primary">Play</button>
-      <button id="btnShop">Shop</button>
-      <button id="btnMusic">Music: On</button>
-    </div>
+    <!-- MAIN MENU -->
+    <section id="menu" class="panel">
+      <h1 class="title">Neon Rush</h1>
+      <p class="sub">Swipe / Tippe links-rechts • Sammle Coins • Weiche aus</p>
 
+      <div class="grid2">
+        <button id="btnPlay" class="primary big">Play</button>
+        <button id="btnPause" class="big" disabled>Pause</button>
+        <button id="btnShop" class="big">Shop</button>
+        <button id="btnSettings" class="big">Settings</button>
+      </div>
+
+      <div class="row">
+        <div class="badge" id="noAdsBadge">Ads: On</div>
+        <div class="badge" id="skinBadge">Skin: Classic</div>
+      </div>
+    </section>
+
+    <!-- SHOP -->
     <section id="shop" class="panel hidden">
-      <h2>Shop (Kaufstufen)</h2>
-      <p>Im Web kannst du echte Käufe z.B. via Stripe einbauen. Hier ist erstmal ein Demo-Shop.</p>
+      <div class="panelHeader">
+        <h2>Shop</h2>
+        <button id="btnCloseShop">✕</button>
+      </div>
+
+      <p class="sub">Demo-Käufe mit LocalStorage (funktioniert wie ein echter Shop – ohne Bezahlung).</p>
 
       <div class="cards">
         <button class="card" data-buy="noads">
           <b>No Ads</b>
-          <span>Entfernt Web-Werbung (wenn integriert)</span>
-          <i>4,99 €</i>
+          <span>Blendet “Werbung” aus (UI-Platzhalter)</span>
+          <i>150 Gems</i>
         </button>
-        <button class="card" data-buy="gems_small">
-          <b>Gems S</b>
-          <span>100 Gems</span>
-          <i>2,99 €</i>
+
+        <button class="card" data-buy="skin_neon">
+          <b>Car Skin: Neon</b>
+          <span>Neues Aussehen</span>
+          <i>80 Gems</i>
         </button>
-        <button class="card" data-buy="gems_big">
-          <b>Gems L</b>
-          <span>500 Gems</span>
-          <i>9,99 €</i>
+
+        <button class="card" data-buy="skin_stealth">
+          <b>Car Skin: Stealth</b>
+          <span>Neues Aussehen</span>
+          <i>80 Gems</i>
+        </button>
+
+        <button class="card" data-buy="gems_100">
+          <b>Gems Pack S</b>
+          <span>+100 Gems</span>
+          <i>Demo: gratis</i>
+        </button>
+
+        <button class="card" data-buy="gems_500">
+          <b>Gems Pack L</b>
+          <span>+500 Gems</span>
+          <i>Demo: gratis</i>
         </button>
       </div>
 
-      <button id="btnCloseShop" class="primary">Schließen</button>
+      <div class="row">
+        <button id="btnClaimDaily" class="primary">Daily Reward</button>
+        <button id="btnResetSave">Reset Save</button>
+      </div>
     </section>
 
+    <!-- SETTINGS -->
+    <section id="settings" class="panel hidden">
+      <div class="panelHeader">
+        <h2>Settings</h2>
+        <button id="btnCloseSettings">✕</button>
+      </div>
+
+      <div class="setting">
+        <label>Music Volume <span id="musicVal" class="muted"></span></label>
+        <input id="musicVol" type="range" min="0" max="100" value="60">
+      </div>
+
+      <div class="setting">
+        <label>SFX Volume <span id="sfxVal" class="muted"></span></label>
+        <input id="sfxVol" type="range" min="0" max="100" value="70">
+      </div>
+
+      <div class="settingRow">
+        <label class="toggle">
+          <input id="toggleVibrate" type="checkbox">
+          <span>Vibration (wenn verfügbar)</span>
+        </label>
+      </div>
+
+      <div class="settingRow">
+        <label class="toggle">
+          <input id="toggleParticles" type="checkbox" checked>
+          <span>Particles</span>
+        </label>
+      </div>
+
+      <button id="btnBackFromSettings" class="primary">Zurück</button>
+    </section>
+
+    <!-- GAME OVER OVERLAY -->
     <section id="overlay" class="panel hidden">
       <h2 id="overTitle">Game Over</h2>
       <p id="overText"></p>
       <div class="row">
         <button id="btnRetry" class="primary">Nochmal</button>
-        <button id="btnContinue">Weiter (Demo)</button>
+        <button id="btnContinue">Revive (10 Gems)</button>
       </div>
     </section>
 
-    <!-- Ad Platzhalter: hier könntest du später AdSense/andere Web Ads einbinden -->
+    <!-- “WERBUNG” (Platzhalter, wird durch NoAds ausgeblendet) -->
     <footer class="adbar" id="adbar">
-      <small>Werbung (Platzhalter) – später z.B. AdSense hier</small>
+      <small>Werbung (Platzhalter) – später z.B. AdSense</small>
     </footer>
   </main>
 
