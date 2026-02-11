@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Neon Rush (Web)</title>
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div id="score">Score: 0</div>
+    <div id="coins">Coins: 0</div>
+  </header>
+
+  <main class="wrap">
+    <canvas id="game" width="360" height="640" aria-label="Game Canvas"></canvas>
+
+    <div class="hud">
+      <button id="btnPlay" class="primary">Play</button>
+      <button id="btnShop">Shop</button>
+      <button id="btnMusic">Music: On</button>
+    </div>
+
+    <section id="shop" class="panel hidden">
+      <h2>Shop (Kaufstufen)</h2>
+      <p>Im Web kannst du echte Käufe z.B. via Stripe einbauen. Hier ist erstmal ein Demo-Shop.</p>
+
+      <div class="cards">
+        <button class="card" data-buy="noads">
+          <b>No Ads</b>
+          <span>Entfernt Web-Werbung (wenn integriert)</span>
+          <i>4,99 €</i>
+        </button>
+        <button class="card" data-buy="gems_small">
+          <b>Gems S</b>
+          <span>100 Gems</span>
+          <i>2,99 €</i>
+        </button>
+        <button class="card" data-buy="gems_big">
+          <b>Gems L</b>
+          <span>500 Gems</span>
+          <i>9,99 €</i>
+        </button>
+      </div>
+
+      <button id="btnCloseShop" class="primary">Schließen</button>
+    </section>
+
+    <section id="overlay" class="panel hidden">
+      <h2 id="overTitle">Game Over</h2>
+      <p id="overText"></p>
+      <div class="row">
+        <button id="btnRetry" class="primary">Nochmal</button>
+        <button id="btnContinue">Weiter (Demo)</button>
+      </div>
+    </section>
+
+    <!-- Ad Platzhalter: hier könntest du später AdSense/andere Web Ads einbinden -->
+    <footer class="adbar" id="adbar">
+      <small>Werbung (Platzhalter) – später z.B. AdSense hier</small>
+    </footer>
+  </main>
+
+  <script src="game.js"></script>
+</body>
+</html>
