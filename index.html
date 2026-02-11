@@ -4,8 +4,15 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <title>Neon Rush (Web)</title>
+
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="stylesheet" href="style.css" />
+
+  <!-- AdSense (ECHT) – setze deine Publisher-ID -->
+  <!-- Du brauchst einen AdSense Account + Freigabe. -->
+  <script async
+    src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXX"
+    crossorigin="anonymous"></script>
 </head>
 <body>
   <header class="topbar">
@@ -14,12 +21,12 @@
   </header>
 
   <main class="wrap">
-    <canvas id="game" width="360" height="640"></canvas>
+    <canvas id="game" width="390" height="720"></canvas>
 
     <!-- MAIN MENU -->
     <section id="menu" class="panel">
       <h1 class="title">Neon Rush</h1>
-      <p class="sub">Swipe / Tippe links-rechts • Sammle Coins • Weiche aus</p>
+      <p class="sub">5 Spuren • Swipe / Tippe • Upgrades • Online-Leaderboard</p>
 
       <div class="grid2">
         <button id="btnPlay" class="primary big">Play</button>
@@ -32,6 +39,12 @@
         <div class="badge" id="noAdsBadge">Ads: On</div>
         <div class="badge" id="skinBadge">Skin: Classic</div>
       </div>
+
+      <div class="row">
+        <button id="btnLeaderboard" class="big">Leaderboard</button>
+        <button id="btnNickname" class="big">Name setzen</button>
+      </div>
+      <p class="tiny muted">Online-Features laufen über Worker: <span id="workerStatus">checking…</span></p>
     </section>
 
     <!-- SHOP -->
@@ -41,37 +54,53 @@
         <button id="btnCloseShop">✕</button>
       </div>
 
-      <p class="sub">Demo-Käufe mit LocalStorage (funktioniert wie ein echter Shop – ohne Bezahlung).</p>
+      <p class="sub">Käufe: Skins, No Ads, Upgrades & echte Gems via Stripe.</p>
 
+      <h3 class="h3">Upgrades (Coins)</h3>
+      <div class="cards">
+        <button class="card" data-upgrade="handling">
+          <b>Handling</b>
+          <span>Schnellerer Spurwechsel</span>
+          <i id="price_handling">…</i>
+        </button>
+        <button class="card" data-upgrade="magnet">
+          <b>Magnet</b>
+          <span>Sammelt Coins aus Nähe</span>
+          <i id="price_magnet">…</i>
+        </button>
+        <button class="card" data-upgrade="boost">
+          <b>Boost</b>
+          <span>Turbo mit Cooldown</span>
+          <i id="price_boost">…</i>
+        </button>
+      </div>
+
+      <h3 class="h3">Premium (Gems)</h3>
       <div class="cards">
         <button class="card" data-buy="noads">
           <b>No Ads</b>
-          <span>Blendet “Werbung” aus (UI-Platzhalter)</span>
+          <span>Blendet Werbung aus</span>
           <i>150 Gems</i>
         </button>
-
         <button class="card" data-buy="skin_neon">
           <b>Car Skin: Neon</b>
           <span>Neues Aussehen</span>
           <i>80 Gems</i>
         </button>
-
         <button class="card" data-buy="skin_stealth">
           <b>Car Skin: Stealth</b>
           <span>Neues Aussehen</span>
           <i>80 Gems</i>
         </button>
+      </div>
 
-        <button class="card" data-buy="gems_100">
-          <b>Gems Pack S</b>
-          <span>+100 Gems</span>
-          <i>Demo: gratis</i>
+      <h3 class="h3">Echte Gems kaufen (Stripe)</h3>
+      <div class="cards">
+        <button class="card" data-stripe="gems_200">
+          <b>200 Gems</b><span>Checkout (echte Zahlung)</span><i>€ 2,99</i>
         </button>
-
-        <button class="card" data-buy="gems_500">
-          <b>Gems Pack L</b>
-          <span>+500 Gems</span>
-          <i>Demo: gratis</i>
+        <button class="card" data-stripe="gems_800">
+          <b>800 Gems</b><span>Checkout (echte Zahlung)</span><i>€ 9,99</i>
         </button>
       </div>
 
@@ -79,6 +108,25 @@
         <button id="btnClaimDaily" class="primary">Daily Reward</button>
         <button id="btnResetSave">Reset Save</button>
       </div>
+    </section>
+
+    <!-- LEADERBOARD -->
+    <section id="leaderboard" class="panel hidden">
+      <div class="panelHeader">
+        <h2>Leaderboard</h2>
+        <button id="btnCloseLeaderboard">✕</button>
+      </div>
+
+      <div class="tabs">
+        <button class="tab active" id="tabLocal">Lokal</button>
+        <button class="tab" id="tabOnline">Online</button>
+      </div>
+
+      <div id="lbLocal" class="lbBox"></div>
+      <div id="lbOnline" class="lbBox hidden"></div>
+
+      <button id="btnRefreshOnline" class="primary">Online aktualisieren</button>
+      <p class="tiny muted">Online benötigt Cloudflare Worker + D1.</p>
     </section>
 
     <!-- SETTINGS -->
@@ -115,19 +163,28 @@
       <button id="btnBackFromSettings" class="primary">Zurück</button>
     </section>
 
-    <!-- GAME OVER OVERLAY -->
+    <!-- GAME OVER -->
     <section id="overlay" class="panel hidden">
-      <h2 id="overTitle">Game Over</h2>
+      <h2>Game Over</h2>
       <p id="overText"></p>
       <div class="row">
         <button id="btnRetry" class="primary">Nochmal</button>
         <button id="btnContinue">Revive (10 Gems)</button>
       </div>
+      <p class="tiny muted">Nach Run wird dein Score online gesendet (wenn Worker aktiv).</p>
     </section>
 
-    <!-- “WERBUNG” (Platzhalter, wird durch NoAds ausgeblendet) -->
+    <!-- Ads Container (ECHT) -->
     <footer class="adbar" id="adbar">
-      <small>Werbung (Platzhalter) – später z.B. AdSense</small>
+      <!-- AdSense Ad Unit: setze data-ad-slot -->
+      <ins class="adsbygoogle"
+        style="display:block"
+        data-ad-client="ca-pub-XXXXXXXXXXXXXXX"
+        data-ad-slot="1234567890"
+        data-ad-format="auto"
+        data-full-width-responsive="true"></ins>
+      <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+      <small class="tiny muted">Wenn No Ads aktiv ist, wird das ausgeblendet.</small>
     </footer>
   </main>
 
